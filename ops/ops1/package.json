@@ -1,5 +1,5 @@
 {
-  "name": "docker-release-test",
+  "name": "ops1",
   "version": "0.0.0-development",
   "description": "Tests docker release, should not get deployed to npm",
   "repository": {
@@ -9,23 +9,31 @@
   "author": "Fleur Kelpin",
   "devDependencies": {
     "@semantic-release/commit-analyzer": "^6.1.0",
-    "@semantic-release/git": "^7.0.8",
     "@semantic-release/exec": "^4.0.0",
+    "@semantic-release/git": "^7.0.8",
+    "@semantic-release/npm": "^7.0.4",
     "semantic-release": "^15.13.3",
     "semantic-release-commit-filter": "^1.0.2"
   },
   "scripts": {
     "dry-run": "semantic-release --dry-run",
-    "release": "semantic-release --ci"
+    "release": "semantic-release --ci",
+    "log-version": "echo $npm_package_version"
   },
   "release": {
     "branches": [
       "master"
     ],
     "plugins": [
-      "@semantic-release/git",
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/npm",
+        {
+          "npmPublish": false
+        }
+      ],
+      "@semantic-release/git",
       [
         "@semantic-release/exec",
         {
