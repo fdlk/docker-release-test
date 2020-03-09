@@ -35,10 +35,10 @@ pipeline {
                                 def dockerFolder = subFolder.replaceAll("/\\z", "");
                                 dir(dockerFolder) {
                                     container('node') {
-                                        env.OLD_TAG = sh("node -p \"require('./package').version\"")
+                                        env.OLD_TAG = sh(script: "node -p \"require('./package').version\"", returnStdout: true)
                                         sh "npm install --ci"
                                         sh "npm run release --ci"
-                                        env.TAG = sh("node -p \"require('./package').version\"")
+                                        env.TAG = sh(script: "node -p \"require('./package').version\"", returnStdout: true)
                                     }
                                     print(env.TAG)
                                     print(env.OLD_TAG)
