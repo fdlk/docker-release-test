@@ -38,9 +38,11 @@ pipeline {
                                     container('node') {
                                         sh "npm install --ci"
                                         sh "npm run release --ci"
+                                        sh "echo ${TAG}"
                                     }
                                     if (env.TAG) {
-                                       container (name: 'kaniko', shell: '/busybox/sh') {
+                                        print(env.TAG)
+                                        container (name: 'kaniko', shell: '/busybox/sh') {
                                             sh "#!/busybox/sh\nmkdir -p ${DOCKER_CONFIG}"
                                             sh "#!/busybox/sh\necho '{\"auths\": {\"https://index.docker.io/v1/\": {\"auth\": \"${DOCKERHUB_AUTH}\"}}}' > ${DOCKER_CONFIG}/config.json"
                                             sh "#!/busybox/sh\n/kaniko/executor --context ${WORKSPACE} --destination molgenis/${dockerFolder}:${TAG} --destination molgenis/${dockerFolder}:latest"
