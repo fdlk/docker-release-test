@@ -34,14 +34,17 @@ pipeline {
                                 // remove trailing slash
                                 def dockerFolder = subFolder.replaceAll("/\\z", "");
                                 dir(dockerFolder) {
-                                    container (name: 'kaniko', shell: '/busybox/sh') {
-                                        sh "#!/busybox/sh\nmkdir -p ${DOCKER_CONFIG}"
-                                        sh "#!/busybox/sh\necho '{\"auths\": {\"https://index.docker.io/v1/\": {\"auth\": \"${DOCKERHUB_AUTH}\"}}}' > ${DOCKER_CONFIG}/config.json"
-                                        sh "#!/busybox/sh\n/kaniko/executor --context ${WORKSPACE} --no-push"
-                                    }
+                                    env.TAG = null
                                     container('node') {
                                         sh "npm install --ci"
                                         sh "npm run release --ci"
+                                    }
+                                    if (env.TAG) {
+                                       container (name: 'kaniko', shell: '/busybox/sh') {
+                                            sh "#!/busybox/sh\nmkdir -p ${DOCKER_CONFIG}"
+                                            sh "#!/busybox/sh\necho '{\"auths\": {\"https://index.docker.io/v1/\": {\"auth\": \"${DOCKERHUB_AUTH}\"}}}' > ${DOCKER_CONFIG}/config.json"
+                                            sh "#!/busybox/sh\n/kaniko/executor --context ${WORKSPACE} --destination molgenis/${dockerFolder}:${TAG} --destination molgenis/${dockerFolder}:latest"
+                                        } 
                                     }
                                 }
                             }
