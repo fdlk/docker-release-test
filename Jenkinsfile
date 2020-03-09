@@ -34,11 +34,11 @@ pipeline {
                                 // remove trailing slash
                                 def dockerFolder = subFolder.replaceAll("/\\z", "");
                                 dir(dockerFolder) {
-                                    env.OLD_TAG = "node -p \"require('./package').version\""
                                     container('node') {
+                                        env.OLD_TAG = sh("node -p \"require('./package').version\"")
                                         sh "npm install --ci"
                                         sh "npm run release --ci"
-                                        env.TAG = "node -p \"require('./package').version\""
+                                        env.TAG = sh("node -p \"require('./package').version\"")
                                     }
                                     print(env.TAG)
                                     print(env.OLD_TAG)
