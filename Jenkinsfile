@@ -40,8 +40,9 @@ pipeline {
                                         sh "npm run release --ci"
                                         env.TAG = "node -p \"require('./package').version\""
                                     }
+                                    print(env.TAG)
+                                    print(env.OLD_TAG)
                                     if (env.TAG != env.OLD_TAG) {
-                                        print(env.TAG)
                                         container (name: 'kaniko', shell: '/busybox/sh') {
                                             sh "#!/busybox/sh\nmkdir -p ${DOCKER_CONFIG}"
                                             sh "#!/busybox/sh\necho '{\"auths\": {\"https://index.docker.io/v1/\": {\"auth\": \"${DOCKERHUB_AUTH}\"}}}' > ${DOCKER_CONFIG}/config.json"
