@@ -1,0 +1,32 @@
+{
+  "name": "ops2",
+  "version": "0.0.0-development",
+  "description": "Tests docker release, should not get deployed to npm",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:fdlk/docker-release-test.git"
+  },
+  "author": "Fleur Kelpin",
+  "devDependencies": {
+    "@semantic-release/commit-analyzer": "^6.1.0",
+    "@semantic-release/git": "^7.0.8",
+    "semantic-release": "^15.13.3",
+    "semantic-release-commit-filter": "^1.0.2",
+  },
+  "scripts": {
+    "dry-run": "semantic-release --dry-run",
+    "release": "semantic-release --ci"
+  },
+  "release": {
+    "branches": [
+      "master"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator"
+    ],
+    "extends": [
+      "semantic-release-commit-filter"
+    ]
+  }
+}

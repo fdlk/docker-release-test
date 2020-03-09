@@ -1,0 +1,16 @@
+release:
+  branches:
+    - master
+  repositoryUrl: 'https://github.com/fdlk/docker-release-test.git'
+  version: '0.0.0-development'
+  plugins:
+    - '@semantic-release/commit-analyzer'
+    - '@semantic-release/release-notes-generator'
+    - '@semantic-release/git'
+    - '@semantic-release/publish'
+  verifyConditions:
+    path: "semantic-release-docker"
+    registryUrl: "docker.io"
+  publish:
+    path: semantic-release-docker
+    name: fdlk/release-test
