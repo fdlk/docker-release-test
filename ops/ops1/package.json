@@ -26,9 +26,12 @@
       "@semantic-release/git",
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
-      ["@semantic-release/exec", {
-        "publishCmd": "export TAG=${nextRelease.version}"
-      }]
+      [
+        "@semantic-release/exec",
+        {
+          "publishCmd": "export TAG=${nextRelease.version}"
+        }
+      ]
     ],
     "extends": [
       "semantic-release-commit-filter"
