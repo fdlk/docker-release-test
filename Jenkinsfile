@@ -4,14 +4,13 @@ pipeline {
             label 'node-erbium'
         }
     }
-    environment {
-    }
     stages {
-        // stage("Retrieve secrets") {
+        // stage('Prepare') {
         //     steps {
         //         container('vault') {
         //             script {
-        //                 env.GITHUB_TOKEN = sh(script: 'vault read -field=value secret/ops/token/github', returnStdout: true)
+        //                 env.GITHUB_TOKEN = sh(script: "vault read -field=value secret/ops/token/github", returnStdout: true)
+        //                 env.DOCKERHUB_AUTH = sh(script: "vault read -field=value secret/gcc/token/dockerhub", returnStdout: true)
         //             }
         //         }
         //     }
@@ -19,6 +18,9 @@ pipeline {
         stage('Build: [ master ]') {
             when {
                 branch 'master'
+            }
+            environment {
+                DOCKER_CONFIG="/root/.docker"
             }
             steps {
                 script {
@@ -32,6 +34,12 @@ pipeline {
                                 // remove trailing slash
                                 def dockerFolder = subFolder.replaceAll("/\\z", "");
                                 dir(dockerFolder) {
+                                    container (name: 'kaniko', shell: '/busybox/sh') {
+                                        sh "#!/busybox/sh\nmkdir -p ${DOCKER_CONFIG}"
+                                        sh "#!/busybox/sh\necho '{\"auths\": {\"https://index.docker.io/v1/\": {\"auth\": \"${DOCKERHUB_AUTH}\"}}}' > ${DOCKER_CONFIG}/config.json"
+                                        sh "#!/busybox/sh\n/kaniko/executor --context ${WORKSPACE} --destination ${REPOSITORY}:${TAG}"
+                                        sh "#!/busybox/sh\n/kaniko/executor --context ${WORKSPACE} --destination ${REPOSITORY}:latest"
+                                    }
                                     container('node') {
                                         sh "npm install --ci"
                                         sh "npm run release --ci"
