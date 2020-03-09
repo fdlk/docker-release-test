@@ -34,13 +34,13 @@ pipeline {
                                 // remove trailing slash
                                 def dockerFolder = subFolder.replaceAll("/\\z", "");
                                 dir(dockerFolder) {
-                                    env.TAG = null
+                                    env.OLD_TAG = "node -p \"require('./package').version\""
                                     container('node') {
                                         sh "npm install --ci"
                                         sh "npm run release --ci"
-                                        sh "echo ${TAG}"
+                                        env.TAG = "node -p \"require('./package').version\""
                                     }
-                                    if (env.TAG) {
+                                    if (env.TAG != env.OLD_TAG) {
                                         print(env.TAG)
                                         container (name: 'kaniko', shell: '/busybox/sh') {
                                             sh "#!/busybox/sh\nmkdir -p ${DOCKER_CONFIG}"
