@@ -1,6 +1,6 @@
 {
   "name": "ops1",
-  "version": "0.0.0-development",
+  "version": "1.0.0",
   "description": "Tests docker release, should not get deployed to npm",
   "repository": {
     "type": "git",
