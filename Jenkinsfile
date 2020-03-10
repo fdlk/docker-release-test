@@ -12,6 +12,9 @@ pipeline {
             when {
                 changeRequest()
             }
+            environment {
+                TAG = "PR-${CHANGE_ID}-${BUILD_NUMBER}"
+            }
             steps {
                 script {
                     // fetch target branch, to see if directories got changed
@@ -31,7 +34,7 @@ pipeline {
                                         container (name: 'kaniko', shell: '/busybox/sh') {
                                             sh "#!/busybox/sh\nmkdir -p ${DOCKER_CONFIG}"
                                             sh "#!/busybox/sh\necho '{\"auths\": {\"https://index.docker.io/v1/\": {\"auth\": \"${DOCKERHUB_AUTH}\"}}}' > ${DOCKER_CONFIG}/config.json"
-                                            sh "#!/busybox/sh\n/kaniko/executor --destination molgenis/${dockerFolder}:latest --destination molgenis/${dockerFolder}:${TAG} --context `pwd`"
+                                            sh "#!/busybox/sh\n/kaniko/executor --destination molgenis/${dockerFolder}:${TAG} --context `pwd`"
                                         }
                                     }
                                 }
