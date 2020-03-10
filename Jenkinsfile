@@ -6,6 +6,7 @@ pipeline {
     }
     environment {
         DOCKER_CONFIG="/root/.docker"
+        REPOSITORY="fdlk/docker-release-test"
     }
     stages {
         stage('Prepare') {
