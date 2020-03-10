@@ -15,9 +15,7 @@
     "semantic-release-commit-filter": "^1.0.2"
   },
   "scripts": {
-    "dry-run": "semantic-release --dry-run",
-    "release": "semantic-release --ci",
-    "log-version": "echo $npm_package_version"
+    "release": "semantic-release --ci"
   },
   "release": {
     "branches": [
